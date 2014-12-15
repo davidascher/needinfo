@@ -26,7 +26,9 @@ module.exports = function(release) {
       path: './build/',
       publicPath: './build/'
     },
-
+    externals: {
+      firebase: 'Firebase'
+    },
     cache: !release,
     debug: !release,
     devtool: false,

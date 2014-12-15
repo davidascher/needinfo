@@ -12,10 +12,13 @@ var React = require('react');
 var ReactFireMixin = require('reactfire');
 var PageActions = require('../actions/PageActions');
 var DefaultLayout = require('../layouts/DefaultLayout');
-var firebaseApp = "https://debt.firebaseio.com/asks";
-var Firebase = require('firebase');
 
-var firebaseApp = new Firebase(firebaseApp)
+var Showdown = require('showdown');
+var converter = new Showdown.converter();
+
+var Firebase = require('firebase');
+var firebaseApp = "https://debt.firebaseio.com/asks";
+var firebaseApp = new Firebase(firebaseApp);
 
 var Comment = React.createClass({
   render: function() {
@@ -53,7 +56,7 @@ var CommentBox = React.createClass({
     // Here we bind the component to Firebase and it handles all data updates,
     // no need to poll as in the React example.
     // XXX uncomment this and the reactification fails. Why?
-    // this.bindAsArray(firebaseApp, "data");
+    this.bindAsArray(firebaseApp, "data");
   },
   getInitialState: function() {
     return {data: []};
