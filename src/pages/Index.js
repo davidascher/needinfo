@@ -52,7 +52,8 @@ var CommentBox = React.createClass({
   componentWillMount: function() {
     // Here we bind the component to Firebase and it handles all data updates,
     // no need to poll as in the React example.
-   // this.bindAsArray(firebaseApp, "data");
+    // XXX uncomment this and the reactification fails. Why?
+    // this.bindAsArray(firebaseApp, "data");
   },
   getInitialState: function() {
     return {data: []};
