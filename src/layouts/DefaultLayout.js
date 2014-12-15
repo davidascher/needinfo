@@ -44,8 +44,8 @@ var DefaultLayout = React.createClass({
     ) : (
       <div className="jumbotron">
         <div className="container text-center">
-          <h1>React</h1>
-          <p>Complex web apps made easy</p>
+          <h1>NeedInfo</h1>
+          <p>Someone needs something from you.</p>
         </div>
       </div>
     );
@@ -58,7 +58,6 @@ var DefaultLayout = React.createClass({
         <div className="navbar-footer">
           <div className="container">
             <p className="text-muted">
-              <span>© KriaSoft</span>
               <span><Link to="/">Home</Link></span>
               <span><Link to="/privacy">Privacy</Link></span>
             </p>

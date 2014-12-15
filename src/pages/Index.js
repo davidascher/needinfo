@@ -9,8 +9,63 @@
 'use strict';
 
 var React = require('react');
+var ReactFireMixin = require('reactfire');
 var PageActions = require('../actions/PageActions');
 var DefaultLayout = require('../layouts/DefaultLayout');
+var firebaseApp = "https://debt.firebaseio.com/asks";
+var Firebase = require('firebase');
+
+var firebaseApp = new Firebase(firebaseApp)
+
+var Comment = React.createClass({
+  render: function() {
+    var rawMarkup = converter.makeHtml(this.props.children.toString());
+    return (
+      <div className="comment">
+        <h2 className="commentAuthor">{this.props.author}</h2>
+        <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+      </div>
+    );
+  }
+});
+
+var CommentList = React.createClass({
+  render: function() {
+    var commentNodes = this.props.data.map(function (comment, index) {
+      return <Comment key={index} author={comment.author}>{comment.text}</Comment>;
+    });
+    return <div className="commentList">{commentNodes}</div>;
+  }
+});
+
+var CommentBox = React.createClass({
+  mixins: [ReactFireMixin],
+
+  handleCommentSubmit: function(comment) {
+    var comments = this.state.data;
+    comments.push(comment);
+    this.setState({data: comments});
+
+    // Here we push the update out to Firebase
+    this.firebaseRefs["data"].push(comment);
+  },
+  componentWillMount: function() {
+    // Here we bind the component to Firebase and it handles all data updates,
+    // no need to poll as in the React example.
+   // this.bindAsArray(firebaseApp, "data");
+  },
+  getInitialState: function() {
+    return {data: []};
+  },
+  render: function() {
+    return (
+      <div className="commentBox">
+        <h1>Comments</h1>
+        <CommentList data={this.state.data} />
+      </div>
+    );
+  }
+});
 
 var HomePage = React.createClass({
 
@@ -19,26 +74,21 @@ var HomePage = React.createClass({
   },
 
   componentWillMount() {
-    PageActions.set({title: 'React.js Starter Kit'});
+    PageActions.set({title: 'NeedInfo'});
   },
 
   render() {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-sm-4">
-            <h3>Runtime Components</h3>
+          <div className="col-sm-6">
+            <h3>People view</h3>
             <dl>
-              <dt><a href="https://facebook.github.io/react/">React</a></dt>
-              <dd>A JavaScript library for building user interfaces, developed by Facebook</dd>
-              <dt><a href="https://github.com/flatiron/director">Director</a></dt>
-              <dd>A tiny and isomorphic URL router for JavaScript</dd>
-              <dt><a href="http://getbootstrap.com/">Bootstrap</a></dt>
-              <dd>CSS framework for developing responsive, mobile first interfaces</dd>
+              <CommentBox/>
             </dl>
           </div>
-          <div className="col-sm-4">
-            <h3>Development Tools</h3>
+          <div className="col-sm-6">
+            <h3>Repo view</h3>
             <dl>
               <dt><a href="http://gulpjs.com">Gulp</a></dt>
               <dd>JavaScript streaming build system and task automation</dd>
@@ -47,10 +97,6 @@ var HomePage = React.createClass({
               <dt><a href="http://www.browsersync.io/">BrowserSync</a></dt>
               <dd>A lightweight HTTP server for development</dd>
             </dl>
-          </div>
-          <div className="col-sm-4">
-            <h3>Fork me on GitHub</h3>
-            <p><a href="https://github.com/kriasoft/react-starter-kit">github.com/kriasoft/react-starter-kit</a></p>
           </div>
         </div>
       </div>
